@@ -1,0 +1,26 @@
+NEIGH-BARKS FRANCHISE — INQUIRY FORM (matches neighbarks.com)
+Updated November 23, 2026
+
+WHAT CHANGED
+The franchise contact form now sends email exactly the way the neighbarks.com retail site sends its
+website forms. server.js uses the same Gmail sender code copied from the retail server (index.js):
+- Sends through the same Gmail account + App Password (smtp.gmail.com, port 465, secure TLS)
+- From: "Neigh-Barks Website <the Gmail account>"   Reply-To: the visitor's email
+- To: franchise@neighbarks.com (same address the retail franchise form uses)
+- Plain-text + HTML email, subject "[Franchise inquiry] <Name> - <Community>"
+- Same spam trap, same limit (8 submissions per 15 minutes per visitor), same 24 KB size limit
+- No extra packages needed (nodemailer removed). No page, text or design changes.
+
+The visitor experience is unchanged: they press SEND, stay on the page, and see a success or error message.
+
+SETUP ON RENDER (separate service — do not touch the retail service)
+1. Create a new Render Web Service from this folder (render.yaml is included). Build: npm install --omit=dev. Start: npm start.
+2. In the new service's Environment tab add the SAME two values the retail service already has:
+     GMAIL_SMTP_USER
+     GMAIL_SMTP_APP_PASSWORD
+   (Copy them from the retail service's Environment screen.)
+3. Deploy, then open https://<your-service>/api/health — "form_email_configured": true means it's ready.
+4. Send a test inquiry from contact.html and confirm it lands in franchise@neighbarks.com.
+5. Point neighbarks franchise domain at this service only after the test works.
+
+NOTE: The form needs this Node server running. Uploading only the HTML files to a static host will not send email.

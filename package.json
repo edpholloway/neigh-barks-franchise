@@ -1,0 +1,14 @@
+{
+  "name": "neigh-barks-franchise-site",
+  "version": "1.1.0",
+  "private": true,
+  "description": "Neigh-Barks Franchise website — inquiry form sends through the same Gmail setup as neighbarks.com",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "check": "node --check server.js && node --check script.js"
+  },
+  "dependencies": {}
+}

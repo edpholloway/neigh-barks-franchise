@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: neigh-barks-franchise
+    runtime: node
+    plan: starter
+    buildCommand: npm install --omit=dev
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      # Same Gmail settings as the retail neighbarks.com service — copy the values from there.
+      - key: GMAIL_SMTP_USER
+        sync: false
+      - key: GMAIL_SMTP_APP_PASSWORD
+        sync: false
