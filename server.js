@@ -241,8 +241,13 @@ async function sendWebsiteFormEmail({to, replyTo, subject, textBody, htmlBody}) 
   if (!websiteFormEmailConfigured()) {
     throw new Error('Website form email is not configured: GMAIL_SMTP_USER or GMAIL_SMTP_APP_PASSWORD is missing.');
   }
-  // Same as retail: always send from the authenticated Gmail account.
-  const from = `Neigh-Barks Website <${cfg.user}>`;
+  // Default is the same as retail: send from the authenticated Gmail account.
+  // Optional FORM_FROM_EMAIL sends as an alias of that account (e.g. franchise@neighbarks.com).
+  // The alias must be listed under Gmail Settings > Accounts > "Send mail as" for the
+  // GMAIL_SMTP_USER mailbox, otherwise Gmail replaces it with GMAIL_SMTP_USER.
+  const sendAs = extractEmailAddress(process.env.FORM_FROM_EMAIL);
+  const fromName = cleanEmailHeaderValue(process.env.FORM_FROM_NAME, 80).replace(/[<>"]/g, '') || 'Neigh-Barks Franchise';
+  const from = sendAs ? `${fromName} <${sendAs}>` : `Neigh-Barks Website <${cfg.user}>`;
   return sendGmailSmtpMessage({ to, from, replyTo, bcc: '', subject, textBody, htmlBody });
 }
 
